@@ -1,23 +1,31 @@
 <?php
-require_once  'funciones.php';
+session_start();
+require_once 'funciones.php';
 require_once 'index.php';
+// if(isset($control)==false){  
+//         echo '<h1> No tiene permiso de ingreso en esta pagina.</h1>';
+//         die();
+// }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //Valida que el campo nombre no esté vacío.
-    if (!validarCampo($datos['nombre'])) {
+    if (!validarCampo($_SESSION['nombre'])) {
         $errores[] = 'El campo nombre esta vacio.';
     }
-    if (!validarCampo($datos['apellido'])) {
+    if (!validarCampo($_SESSION['apellido'])) {
         $errores[] = 'El campo apellido esta vacio.';
     }
-  
+
     if (!checkdate($_POST['mesNacimiento'], $_POST['diaNacimiento'], $_POST['anioNacimiento'])) {
         $errores[] = 'La fecha de Nacimiento es incorrecto.';
     } else
-        $fechaNacimiento = date($_POST['mesNacimiento'] . "/" . $_POST['diaNacimiento'] . "/" . $_POST['anioNacimiento']);
+        $_SESSION['fechaNacimiento'] = date($_POST['mesNacimiento'] . "/" . $_POST['diaNacimiento'] . "/" . $_POST['anioNacimiento']);
+    $_SESSION['edad'] = Calcular_edad($_POST['mesNacimiento'], $_POST['diaNacimiento'], $_POST['anioNacimiento']);
 }
-if (!empty($errores) || (empty($datos))) {
+
+
+if (!empty($errores)) {
     if ($errores):
         ?>
         <div class="alert">
@@ -29,12 +37,11 @@ if (!empty($errores) || (empty($datos))) {
             <?php endforeach; ?>
         </ul>
         <?php
-
     endif;
+  
 }
-
-
 else {
-    require 'confirmacion.php';
+        
+        include_once 'confirmacion.php';
 }
 

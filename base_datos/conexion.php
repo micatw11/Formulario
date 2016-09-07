@@ -1,11 +1,11 @@
 <?php
-
 error_reporting(E_ALL);
 ini_set("display_errors", true);
+require_once '../Procesar.php';  
 
 function conectar() {
     try {
-        $pdo = new PDO('mysql:host=localhost;dbname=clientes_db', 'root', ' ');
+        $pdo = new PDO('mysql:host=localhost;dbname=clientes_db', 'root', '1234');
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->exec("SET NAMES UTF8");
@@ -16,10 +16,10 @@ function conectar() {
     }
 }
 
-function ingresar_variables($pdo, $datos) {
+function ingresar_variables($pdo, $_SESSION) {
     try {
-        $sql = "INSERT INTO clientes (apellido, nombre , activo,fecha_nac,nacionalidad_id)"
-                . "VALUES ('" . $datos['apellido'] . "','" . $datos['nombre'] . "','1','" . $datos['fechaNacimiento'] . "','1')";
+        $sql = "INSERT INTO clientes (apellido, nombre , activo,fecha_nac,edad, nacionalidad_id)"
+                . "VALUES ('" . $_SESSION['apellido'] . "','" . $_SESSION['nombre'] . "','".$_SESSION['activo']."','" . $_SESSION['fechaNacimiento'] . "','".$_SESSION['edad']."','1')";
         $pdo->exec($sql);
         $pdo->commit();
         return $pdo;
@@ -34,8 +34,8 @@ function datos_bd($pdo) {
         $sql = "SELECT * FROM clientes";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
-        $results = $stmt->setFetchMode(PDO::FETCH_ASSOC); //especificamos la salida como un array
-        //  //podria ser PDO::FECH_OBJ con  $fila->apellido; var_dump($fila);$stmt->fetchall();
+        $results = $stmt->fetchall(); //especificamos la salida como un array
+       //podria ser PDO::FECH_OBJ con  $fila->apellido; var_dump($fila);$stmt->fetchall();
         return $results;
     } catch (PDOException $e) {
       

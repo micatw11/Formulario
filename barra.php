@@ -1,7 +1,7 @@
 <html>
 
         <?php require 'header.php';?>
-
+    <div
 <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -24,3 +24,4 @@
         </div>
       </div>
     </nav>
+</div>

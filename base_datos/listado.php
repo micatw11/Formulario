@@ -1,19 +1,22 @@
 <html>
     <head>
-        <?php require '../header.php'; ?>
-       
-        <?php include_once './conexion.php'; ?>
+        <?php require_once '../header.php'; ?>
+        <?php //require_once 'barra.php'; ?>
+        <?php include_once 'conexion.php'; ?>
         <title>Listado de Personas</title> 
     </head>
     <body>  
         <?php
-        $pdo= conectar();
-	$personas= datos_bd($pdo);
-        $total_resultados= count($personas);
-	?>
-        
+        $pdo = conectar();
+        $personas = datos_bd($pdo);
+        $total_resultados = count($personas);
+        ?>
+
         <h2 class="sub-header">Listado de Personas</h2>
+        
         <hr>
+        <a href="../index.php" class="btn bg-info ">Alta</a>
+        
         <div class="table-responsive">
             <table class="table table-striped  table-bordered table-hover">
                 <thead>
@@ -21,26 +24,23 @@
                         <th>Id</th>
                         <th>Apellido y Nombre</th>
                         <th>Fecha Nacimiento</th>
+                        <th>Edad</th>
                         <th>Activo</th>
-                        <th colspan="3">Actions</th>
+                        <th colspan="3">Acciones</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <?php foreach ($personas as $res) {
-                            echo  '<tr><td>'.$res['id'].'</td>';
-                            echo '<td>'.$res['apellido'].','.$res['nombre'].'</td>';
-                            echo  '<td>'.$res['fecha_nac'].'</td>';
-                            echo  '<td>'.$res['activo'].'</td>';
-                            echo '<td><a href="" class="btn btn-primary" style="   margin: auto">Read</a></td>'; 
-                            echo '<td><a href="" class="btn btn-warning">Update</a></td>';
-                            echo  '<td><a href="" class="btn btn-danger" style="border-collapse: collapse ">Borrar</a> </td></tr>';
-                    }
-//           ?>
-
-                       
-
+                    <?php foreach ($personas as $res){ ?>
+                        <tr><td><?php echo $res['id'];?></td>
+                            <td><?php echo $res['apellido'];?> , <?php echo $res['nombre'];?></td>
+                            <td><?php echo $res['fecha_nac'];?></td>
+                            <td><?php echo $res['edad'];?></td>
+                            <td><?php echo $res['activo']==true?'Si':'No';?></td>
+                            <td><a href="index.php" class="btn btn-warning">Modificar</a></td>
+                            <td><a href="" class="btn btn-danger" style="border-collapse: collapse ">Borrar</a> </td></tr>
+                    <?php } ?>          
                 </tbody>
-
             </table>
         </div>
 
