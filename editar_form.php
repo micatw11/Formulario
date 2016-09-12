@@ -1,3 +1,4 @@
+
 <!DOCTYPE>
 <html>
     <head>
@@ -18,22 +19,22 @@
                     <br><br><br><br>
                     <div class="form-group">
                         <label for="nombre">Nombres:</label>
-                        <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese nombre" required="required" value="<?php echo $_POST['nombre'] ?>" onkeypress="return soloLetras(event)">
+                        <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese nombre" required="required" value="<?php echo $persona['nombre'] ?>" onkeypress="return soloLetras(event)">
                     </div>
                     <div class="form-group"  >
                         <label for="apellido">Apellido:</label>
-                        <input type="text" name="apellido" class="form-control" id="apellido" placeholder="Ingrese apellido" required="required" value="<?php echo $_POST['apellido'] ?>"onkeypress="return soloLetras(event)">
+                        <input type="text" name="apellido" class="form-control" id="apellido" placeholder="Ingrese apellido" required="required" value="<?php echo $persona['apellido'] ?>"onkeypress="return soloLetras(event)">
                     </div>
 
                     <div class="form-group">
                         <label for="">Numero de Documento:</label>
-                        <input type="number" class="form-control" name="documento" placeholder="Ingrese documento" value="<?php echo $_POST['documento'] ?>"onkeypress="return soloNumeros(event)">
+                        <input type="number" class="form-control" name="documento" placeholder="Ingrese documento" value="<?php echo $persona['documento'] ?>"onkeypress="return soloNumeros(event)">
                     </div> 
                     <div>
 
                         <label for="">Fecha</label><br>
                         <select id="dia" name="diaNacimiento" class="dia">
-                            <option selected="selected" value="<?php echo $_POST['dia'] ?>">Día</option>
+                            <option selected="selected" value="<?php echo $persona['dia'] ?>">Día</option>
                             <?php for ($i = 1; $i <= 31; $i++)://Muestra los 31 dias del mes-  fecha de nacimiento ?>
 
                                 <?php echo "<option value=" . $i . ">" . $i . "</option>" ?>
@@ -42,14 +43,14 @@
 
 
                         <select id="mes" name="mesNacimiento" class="mes">
-                            <option selected="selected" value="<?php echo $_POST['mes'] ?>">Mes </option>
+                            <option selected="selected" value="<?php echo $persona['mes'] ?>">Mes </option>
                             <?php foreach ($Meses as $clave => $mes)://muestra los meses- fecha de nacimiento?>
                                 <?php echo "<option value=" . $clave . ">" . $mes . "</option>" ?>
                             <?php endforeach; ?>
                         </select>
 
                         <select id="anio" name="anioNacimiento" class="anio">
-                            <option selected="selected" value="<?php echo $_POST['anio'] ?>">Año </option>
+                            <option selected="selected" value="<?php echo $persona['anio'] ?>">Año </option>
                             <?php for ($j = 2000; $j >= 1930; $j--)://Muestra los años- fecha nacimiento?>
                                 <?php echo "<option value=" . $j . ">" . $j . "</option>" ?>
                             <?php endfor; ?>

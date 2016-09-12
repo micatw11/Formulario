@@ -4,11 +4,14 @@
         <?php //require_once 'barra.php'; ?>
         <?php include_once 'conexion.php'; ?>
         <title>Listado de Personas</title> 
+        <?php include_once '../funciones.php'; ?>
+
     </head>
     <body>  
         <?php
-        $pdo = conectar();
-        $personas = datos_bd($pdo);
+        
+        $personas = datos_bd('personas');
+        $usuarios = datos_bd('usuarios');
         $total_resultados = count($personas);
         ?>
 
@@ -25,20 +28,20 @@
                         <th>Apellido y Nombre</th>
                         <th>Fecha Nacimiento</th>
                         <th>Edad</th>
-                        <th>Activo</th>
+                        <th>Estado</th>
                         <th colspan="3">Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php foreach ($personas as $res){ ?>
+                    <?php foreach ($personas as $res){  ?>
                         <tr><td><?php echo $res['id'];?></td>
                             <td><?php echo $res['apellido'];?> , <?php echo $res['nombre'];?></td>
                             <td><?php echo $res['fecha_nac'];?></td>
                             <td><?php echo $res['edad'];?></td>
-                            <td><?php echo $res['activo']==true?'Si':'No';?></td>
-                            <td><a href="index.php" class="btn btn-warning">Modificar</a></td>
-                            <td><a href="" class="btn btn-danger" style="border-collapse: collapse ">Borrar</a> </td></tr>
+                            <td><?php echo $usuarios['estado']==true?'Si':'No';?></td>
+                            <td><a href="../editar.php?id=<?php echo $res['id']?>" class="btn btn-warning">Modificar</a></td>
+                            <td><a href="javascript:;" onclick="aviso('../eliminar.php?id=<?php echo $res['id']?>'); return false;" class="btn btn-danger" style="border-collapse: collapse ">Borrar</a> </td></tr>
                     <?php } ?>          
                 </tbody>
             </table>

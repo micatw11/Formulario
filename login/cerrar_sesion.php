@@ -9,7 +9,7 @@ session_destroy(); // borra datos fisicos
 //
 session_abort();
 //redireccion al index
-header("Location; index.php");
+header("Location: login_index.php");
 
 
 
