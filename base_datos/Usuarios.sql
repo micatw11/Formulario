@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 12-09-2016 a las 07:06:21
--- Versión del servidor: 5.5.50-0ubuntu0.14.04.1
+-- Tiempo de generación: 14-09-2016 a las 06:32:30
+-- Versión del servidor: 5.5.52-0ubuntu0.14.04.1
 -- Versión de PHP: 5.5.9-1ubuntu4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `clientes`
+-- Base de datos: `Usuarios`
 --
 
 -- --------------------------------------------------------
@@ -52,31 +52,35 @@ INSERT INTO `aplicaciones_web` (`id`, `titulo`, `descripcion`, `fecha_habilitaci
 
 CREATE TABLE IF NOT EXISTS `gestion_roles_permisos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario_id` int(9) NOT NULL,
+  `aplicaciones_web_id` int(11) NOT NULL,
   `permisos_id` int(11) NOT NULL,
   `roles_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_gestion_roles_permisos_permisos1_idx` (`permisos_id`),
   KEY `fk_gestion_roles_permisos_roles1_idx` (`roles_id`),
-  KEY `permisos_id` (`permisos_id`)
+  KEY `permisos_id` (`permisos_id`),
+  KEY `fk_gestion_usuarios_idx` (`usuario_id`),
+  KEY `fk_aplicaciones_web_idx` (`aplicaciones_web_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `gestion_roles_permisos`
 --
 
-INSERT INTO `gestion_roles_permisos` (`id`, `permisos_id`, `roles_id`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 1, 2),
-(5, 4, 1),
-(6, 4, 2),
-(7, 5, 3),
-(8, 5, 2),
-(9, 5, 1),
-(10, 6, 3),
-(11, 7, 2),
-(12, 7, 1);
+INSERT INTO `gestion_roles_permisos` (`id`, `usuario_id`, `aplicaciones_web_id`, `permisos_id`, `roles_id`) VALUES
+(1, 0, 0, 1, 1),
+(2, 0, 0, 2, 1),
+(3, 0, 0, 3, 1),
+(4, 0, 0, 1, 2),
+(5, 0, 0, 4, 1),
+(6, 0, 0, 4, 2),
+(7, 0, 0, 5, 3),
+(8, 0, 0, 5, 2),
+(9, 0, 0, 5, 1),
+(10, 0, 0, 6, 3),
+(11, 0, 0, 7, 2),
+(12, 0, 0, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -108,106 +112,28 @@ INSERT INTO `log` (`id`, `usuarios_id1`, `nombre_tabla`, `registro_id`, `evento`
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `nacionalidad`
---
-
-CREATE TABLE IF NOT EXISTS `nacionalidad` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(50) CHARACTER SET utf8 NOT NULL,
-  `iso` varchar(3) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Volcado de datos para la tabla `nacionalidad`
---
-
-INSERT INTO `nacionalidad` (`id`, `descripcion`, `iso`) VALUES
-(1, 'Argentina', 'ARG'),
-(2, 'Brasil', 'BRA');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `permisos`
 --
 
 CREATE TABLE IF NOT EXISTS `permisos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `aplicaciones_web_id` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `descripcion` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`,`aplicaciones_web_id`),
-  KEY `fk_permisos_aplicaciones_web1_idx` (`aplicaciones_web_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Volcado de datos para la tabla `permisos`
 --
 
-INSERT INTO `permisos` (`id`, `aplicaciones_web_id`, `nombre`, `descripcion`) VALUES
-(1, 1, 'editar_cliente', 'Se realizaran cambios en los registros de los clientes.'),
-(2, 1, 'baja_cliente', 'Se dará de baja al registro del cliente.'),
-(3, 1, 'crear_cliente', 'se creará un cliente.'),
-(4, 2, 'crear_pelicula', 'se registran películas nuevas'),
-(5, 2, 'crear_comentarios', 'Podrán dejar comentarios en las sinopsis de las películas'),
-(6, 2, 'editar_comentario', 'Podrá editar el comentario publicado'),
-(7, 2, 'borrar_comentario', 'Borrar un comentario.');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `permisos_adicionales`
---
-
-CREATE TABLE IF NOT EXISTS `permisos_adicionales` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `usuarios_id` int(11) NOT NULL,
-  `permisos_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`usuarios_id`,`permisos_id`),
-  KEY `fk_usuarios_permisos_adicionales_usuarios1_idx` (`usuarios_id`),
-  KEY `fk_usuarios_permisos_adicionales_permisos1_idx` (`permisos_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
---
--- Disparadores `permisos_adicionales`
---
-DROP TRIGGER IF EXISTS `log_usuarios_adicionalesInsert`;
-DELIMITER //
-CREATE TRIGGER `log_usuarios_adicionalesInsert` AFTER INSERT ON `permisos_adicionales`
- FOR EACH ROW BEGIN 
-INSERT INTO log 
-(`usuarios_id1`,`nombre_tabla`,`registro_id`,`evento`,`fecha_evento`,`valor_antiguo`) 
-VALUES (  
-       @usuarioID,
-       'usuarios_permisos_adicionales',
-        NEW.id,
-     
-        'INSERT',
-        NOW(),
-        @objeto);
-
-END
-//
-DELIMITER ;
-DROP TRIGGER IF EXISTS `log_usuarios_adicionalesUpdate`;
-DELIMITER //
-CREATE TRIGGER `log_usuarios_adicionalesUpdate` AFTER UPDATE ON `permisos_adicionales`
- FOR EACH ROW BEGIN 
-INSERT INTO log 
-(`usuarios_id1`,`nombre_tabla`,`registro_id`,`evento`,`fecha_evento`,`valor_antiguo`) 
-VALUES (  
-       @usuarioID,
-       'usuarios_permisos_adicionales',
-        OLD.id,
-     
-        'UPDATE',
-        NOW(),
-        'objeto');
-
-END
-//
-DELIMITER ;
+INSERT INTO `permisos` (`id`, `nombre`, `descripcion`) VALUES
+(1, 'CREAR REGISTRO', 'Se realizaran cambios en los registros de los clientes.'),
+(2, 'ELIMINAR REGISTRO', 'Se dará de baja al registro del cliente.'),
+(3, 'MODIFICAR REGISTRO', 'se creará un cliente.'),
+(4, 'SELECCIONAR REGISTRO', 'se registran películas nuevas'),
+(5, 'CREAR USUARIO', 'Podrán dejar comentarios en las sinopsis de las películas'),
+(6, 'MODIFICAR USUARIO', 'Podrá editar el comentario publicado'),
+(7, 'ELIMINAR USUARIO', 'Borrar un comentario.');
 
 -- --------------------------------------------------------
 
@@ -217,25 +143,22 @@ DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS `personas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `usuarios_id` int(11) NOT NULL,
-  `documento` varchar(11) NOT NULL,
-  `apellido` varchar(45) NOT NULL,
-  `nombre` varchar(45) NOT NULL,
-  `fecha_nac` date NOT NULL,
-  `edad` int(11) NOT NULL,
-  `nacionalidad_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`,`usuarios_id`),
-  UNIQUE KEY `dni_UNIQUE` (`documento`),
-  KEY `fk_perfiles_usuarios_idx` (`usuarios_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+  `documento` int(9) NOT NULL,
+  `apellido` text NOT NULL,
+  `nombre` text NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `doc_unico` (`documento`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `personas`
 --
 
-INSERT INTO `personas` (`id`, `usuarios_id`, `documento`, `apellido`, `nombre`, `fecha_nac`, `edad`, `nacionalidad_id`) VALUES
-(1, 1, '32656666', 'Garcia', 'Anabel', '2000-09-21', 15, 0),
-(3, 2, '12121211', 'Ojeda', 'Oscar', '1960-09-15', 55, 0);
+INSERT INTO `personas` (`id`, `documento`, `apellido`, `nombre`, `fecha_nacimiento`) VALUES
+(1, 3265988, 'Garcia', 'Juan', '2016-09-24'),
+(2, 1245454, 'Santana', 'Sergio', '2014-11-18'),
+(5, 45454544, 'Flores', 'Montoto', '2012-08-28');
 
 -- --------------------------------------------------------
 
@@ -267,24 +190,25 @@ INSERT INTO `roles` (`id`, `nombre`, `descripcion`) VALUES
 
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `roles_id` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL,
+  `nombre_usuario` varchar(45) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `persona_id` int(11) NOT NULL,
   `estado` enum('activo','inactivo') NOT NULL DEFAULT 'activo',
-  PRIMARY KEY (`id`,`roles_id`),
-  UNIQUE KEY `nombre_UNIQUE` (`nombre`),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre_UNIQUE` (`nombre_usuario`),
   UNIQUE KEY `contraseña_UNIQUE` (`password`),
-  KEY `fk_usuarios_roles1_idx` (`roles_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
+  UNIQUE KEY `fk_datos_persona` (`persona_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `roles_id`, `nombre`, `password`, `estado`) VALUES
-(1, 1, 'root', '2b394801841d46816593047353319f2e4ad7eae1', 'activo'),
-(2, 3, 'oscar', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'activo'),
-(3, 2, 'juan', 'f7c3bc1d808e04732adf679965ccc34ca7ae3441', 'activo');
+INSERT INTO `usuarios` (`id`, `nombre_usuario`, `password`, `persona_id`, `estado`) VALUES
+(1, 'root', '2b394801841d46816593047353319f2e4ad7eae1', 0, 'activo'),
+(2, 'oscar', '7c4a8d09ca3762af61e59520943dc26494f8941b', 2, 'activo'),
+(3, 'juan', 'f7c3bc1d808e04732adf679965ccc34ca7ae3441', 1, 'activo'),
+(5, 'juan_l', 'dfgdfvxcvdfvdvf', 5, 'activo');
 
 --
 -- Restricciones para tablas volcadas
@@ -304,23 +228,10 @@ ALTER TABLE `log`
   ADD CONSTRAINT `fk_log_usuarios1` FOREIGN KEY (`usuarios_id1`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `permisos`
---
-ALTER TABLE `permisos`
-  ADD CONSTRAINT `fk_permisos_aplicaciones_web1` FOREIGN KEY (`aplicaciones_web_id`) REFERENCES `aplicaciones_web` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `permisos_adicionales`
---
-ALTER TABLE `permisos_adicionales`
-  ADD CONSTRAINT `fk_usuarios_permisos_adicionales_permisos1` FOREIGN KEY (`permisos_id`) REFERENCES `permisos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_usuarios_permisos_adicionales_usuarios1` FOREIGN KEY (`usuarios_id`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Filtros para la tabla `personas`
 --
 ALTER TABLE `personas`
-  ADD CONSTRAINT `fk_perfiles_usuarios` FOREIGN KEY (`usuarios_id`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `datos` FOREIGN KEY (`id`) REFERENCES `usuarios` (`persona_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
