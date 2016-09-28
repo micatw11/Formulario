@@ -1,13 +1,14 @@
+<?php include_once '../header.php';?>
 <html>
     <head>
         <title>Iniciar Sesion</title>
     </head>
     <body>
-        <hr />
+         
     <center>
-        <br><br>
-        <br><br>
+       <div class="panel-footer"><hr />
         <form method="post" action= "variables.php">
+                    
             <div class="form-group">
                 <label>Nombre Usuario:</label><br>
                 <input name= "username" type="text" class="form-control" id="username" required>
@@ -23,7 +24,7 @@
             </div>
             <button type="submit" name="Submit" class="btn btn-default">Iniciar</button>
             <button type="submit" name="Submit" class="btn btn-default">Login</button>
-        </form>
+        </form></div>
     </center>
         <hr />
     </body>

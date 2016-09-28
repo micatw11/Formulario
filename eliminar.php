@@ -9,4 +9,4 @@ $persona= borrar($id);
 
 echo ' <ul style="color: red;"> El registro se elimino correctamente';
 
-include_once 'base_datos/listado.php';
+header('Location: base_datos/listado.php');

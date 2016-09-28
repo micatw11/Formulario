@@ -38,7 +38,6 @@ function Calcular_edad($dianaz,$mesnaz, $anonaz) {
     if ($mesnaz > $mes) {
         $ano = ($ano - 1);
     }
-//ya no habría mas condiciones, ahora simplemente restamos los años y mostramos el resultado como su edad
     $datos['edad'] = ($ano - $anonaz);
     return ($datos['edad']);
 }

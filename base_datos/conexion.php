@@ -9,7 +9,7 @@ ini_set("display_errors", true);
 function conectar() {
     try {
         
-        $pdo = new PDO('mysql:host=localhost;dbname=clientes', 'root', '1234');
+        $pdo = new PDO('mysql:host=localhost;dbname=Base_Datos', 'root', 'udc');
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->exec("SET NAMES UTF8");
@@ -23,21 +23,15 @@ function conectar() {
 function ingresar_variables() {
     try {
         $pdo = conectar();
-         $sql =  "INSERT INTO usuarios ("
-                . "nombre, "
-                . "estado)"
-                . "VALUES ('". $_SESSION['nombre'] . "','" . $_SESSION['estado'] . "')";
-        $pdo->exec($sql);
-        $sql2 = "INSERT INTO personas ("
-                . "usuarios_id, "
+        
+        $sql2 = "INSERT INTO persona_cliente ("
                 . "apellido, "
                 . "nombre,"
                 . "documento, "
                 . "fecha_nac,"
                 . "edad, "
-                . "nacionalidad_id)"
-                . "VALUES (LAST_INSERT_ID(),'" 
-                . $_SESSION['apellido'] . "','" 
+                . "nacionalidades_id)"
+                . "VALUES ('".$_SESSION['apellido']."','"
                 . $_SESSION['nombre'] . "','" 
                  . $_SESSION['documento'] . "','"
                 . $_SESSION['fechaNacimiento'] . "','" 
@@ -49,7 +43,7 @@ function ingresar_variables() {
         return $pdo;
     } catch (PDOException $e) {
 
-        echo 'Error de insercion de archivos: ' . $e->getMessage();
+        //echo 'Error de insercion de archivos: ' . $e->getMessage();
     }
 }
 
@@ -71,7 +65,7 @@ function datos_bd($nom_tabla) {
 function datos_limitados($inicio, $TAMANO_PAGINA) {
     try {
         $pdo = conectar();
-        $sql = "SELECT * FROM personas LIMIT " . $inicio . "," . $TAMANO_PAGINA;
+        $sql = "SELECT * FROM persona_cliente LIMIT " . $inicio . "," . $TAMANO_PAGINA;
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $results = $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -84,7 +78,7 @@ function datos_limitados($inicio, $TAMANO_PAGINA) {
 function login($username) {
     try {
         $pdo = conectar();
-        $sql = "SELECT * FROM usuarios WHERE nombre = '$username'";
+        $sql = "SELECT * FROM persona_usuario WHERE nombre = '$username'";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -97,21 +91,25 @@ function login($username) {
 
 function update($id){
         $pdo = conectar();
-         $sql = $pdo->prepare('UPDATE `clientes`  '
+         $sql = $pdo->prepare('UPDATE `persona_cliente`  '
                  . 'SET '
                  . 'nombre=:nombre, '
                  . 'apellido=:apellido,'
-                 . 'fecha_nacimiento=:fecha_nacimiento,'
-                 . 'nacionalidad_id=:nacionalidad_id,'
+                 . 'documento=:documento,'
+                 . 'edad=:edad,'
+                 . 'fecha_nac=:fecha_nacimiento,'
+                 . 'nacionalidades_id=:nacionalidad_id,'
                  . 'activo=:activo '
                  . 'WHERE id = :id;');
-         $consulta->bindParam(':nombre', $info['nombre']);
-         $consulta->bindParam(':apellido', $info['apellido']);
-         $consulta->bindParam(':fecha_nacimiento', $info['fecha_nacimiento']);
-         $consulta->bindParam(':nacionalidad_id', $info['nacionalidad']);
-         $consulta->bindParam(':activo', $info['activo']);
-         $consulta->bindParam(':id', $id);
-         $consulta->execute();
+         $sql->bindParam(':nombre', $_SESSION['nombre']);
+         $sql->bindParam(':apellido', $_SESSION['apellido']);
+         $sql->bindParam(':documento', $_SESSION['documento']);
+         $sql->bindParam(':edad', $_SESSION['edad']);
+         $sql->bindParam(':fecha_nacimiento', $_SESSION['fechaNacimiento']);
+         $sql->bindParam(':nacionalidad_id', $_SESSION['nacionalidad']);
+         $sql->bindParam(':activo', $_SESSION['activo']);
+         $sql->bindParam(':id', $id);
+         $sql->executeUpdate();
          
     
 }
@@ -121,7 +119,7 @@ function buscarPersonas($id){
     try {
     $pdo = conectar();
     $sql = "SELECT * "
-        . "FROM personas "
+        . "FROM persona_cliente "
         . "WHERE id= $id " ;
    
     $stmt = $pdo->prepare($sql);
@@ -138,7 +136,7 @@ function buscarUsuario($id){
     try {
     $pdo = conectar();
     $sql = "SELECT * "
-        . "FROM usuarios"
+        . "FROM persona_usuario"
         . "WHERE id= $id " ;
    
     $stmt = $pdo->prepare($sql);
@@ -155,14 +153,14 @@ function buscarUsuario($id){
 
 function borrar($id){
         $pdo = conectar();
-         $consulta = $pdo->prepare("DELETE FROM personas WHERE id = '$id';");         
+         $consulta = $pdo->prepare("DELETE FROM persona_cliente WHERE id = '$id';");         
          $consulta->execute();
 }
 
 function Nacionalidad(){
     try {
         $pdo = conectar();
-    $stmt=$pdo->prepare("SELECT * FROM nacionalidad");
+    $stmt=$pdo->prepare("SELECT * FROM nacionalidades");
     $stmt->execute();
     $results = $stmt->fetchall(); 
         return $results;

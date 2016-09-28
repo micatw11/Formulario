@@ -5,7 +5,13 @@
         <?php
         require 'header.php';
         require_once 'barra.php';
+        include_once 'base_datos/conexion.php';
         //     include_once 'index.php';
+
+       
+        $Nacionalidad = Nacionalidad();
+
+        $errores = array();
         ?>
     </head> 
     <body >
@@ -15,53 +21,34 @@
 
             <form method="post" action= "Procesar.php">
                 <fieldset> 
-                    <br><br><br><br>
-                    <div class="form-group">
-                        <label for="nombre">Nombres:</label>
-                        <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese nombre" required="required" value="<?php echo $_POST['nombre'] ?>" onkeypress="return soloLetras(event)">
-                    </div>
+                    <br><br><br><br> 
                     <div class="form-group"  >
                         <label for="apellido">Apellido:</label>
-                        <input type="text" name="apellido" class="form-control" id="apellido" placeholder="Ingrese apellido" required="required" value="<?php echo $_POST['apellido'] ?>"onkeypress="return soloLetras(event)">
+                        <input type="text" name="apellido" class="form-control" id="apellido" placeholder="Ingrese apellido" value="<?php echo $_SESSION['apellido']?>"required="required" onkeypress="return soloLetras(event)">
                     </div>
 
                     <div class="form-group">
+                        <label for="nombre">Nombres:</label>
+                        <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese nombre" required="required" value="<?php echo $_SESSION['nombre']?>" onkeypress="return soloLetras(event)">
+                    </div>
+                   
+                    <div class="form-group">
                         <label for="">Numero de Documento:</label>
-                        <input type="number" class="form-control" name="documento" placeholder="Ingrese documento" value="<?php echo $_POST['documento'] ?>"onkeypress="return soloNumeros(event)">
+                        <input type="number" class="form-control" name="documento" placeholder="Ingrese documento" value="<?php echo $_SESSION['documento']?>"onkeypress="return soloNumeros(event)">
                     </div> 
                     <div>
 
                         <label for="">Fecha</label><br>
-                        <select id="dia" name="diaNacimiento" class="dia">
-                            <option selected="selected" value="<?php echo $_POST['dia'] ?>">Día</option>
-                            <?php for ($i = 1; $i <= 31; $i++)://Muestra los 31 dias del mes-  fecha de nacimiento ?>
+                        <input type=" Date" name="fecha_nac" class="form-control" id="fecha_nac" placeholder="Ingrese fecha_nac" required="required">
 
-                                <?php echo "<option value=" . $i . ">" . $i . "</option>" ?>
-                            <?php endfor; ?>
-                        </select>
-
-
-                        <select id="mes" name="mesNacimiento" class="mes">
-                            <option selected="selected" value="<?php echo $_POST['mes'] ?>">Mes </option>
-                            <?php foreach ($Meses as $clave => $mes)://muestra los meses- fecha de nacimiento?>
-                                <?php echo "<option value=" . $clave . ">" . $mes . "</option>" ?>
-                            <?php endforeach; ?>
-                        </select>
-
-                        <select id="anio" name="anioNacimiento" class="anio">
-                            <option selected="selected" value="<?php echo $_POST['anio'] ?>">Año </option>
-                            <?php for ($j = 2000; $j >= 1930; $j--)://Muestra los años- fecha nacimiento?>
-                                <?php echo "<option value=" . $j . ">" . $j . "</option>" ?>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
+                    </div> 
                     <br>
                     <div class="form-group">
                         <br><label>Nacionalidad:</label><br>
                         <select name="nacionalidad">				
                             <?php foreach ($Nacionalidad as $pais): ?>
-                                <?php echo "<option value= ". $pais['id'] ." >" . $pais['descripcion'] . " " . $pais['iso'] . "</option>" ?>
-                            <?php endforeach; ?>
+                                <?php echo "<option value= " . $pais['id'] . " >" . $pais['descripcion'] . " " . $pais['iso'] . "</option>" ?>
+<?php endforeach; ?>
                         </select>
                     </div>
 

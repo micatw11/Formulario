@@ -16,10 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!validarCampo($_POST['apellido'])) {
         $errores[] = 'El campo apellido esta vacio.';
     }
-
-    if (!checkdate($_POST['mesNacimiento'], $_POST['diaNacimiento'], $_POST['anioNacimiento'])) {
-        $errores[] = 'La fecha de Nacimiento es incorrecto.';
-    }
 }
 
 $opciones_Documento = array(
@@ -48,9 +44,23 @@ if (!empty($errores)) {
         </ul>
         <?php
     endif;
-    header("Location: index.php");
+      $_SESSION['apellido'] = filter_var($_POST['apellido'], FILTER_SANITIZE_STRING);
+    $_SESSION['nombre'] = filter_var($_POST['nombre'], FILTER_SANITIZE_STRING);
+    $_SESSION['documento'] = filter_var($_POST['documento'], FILTER_SANITIZE_STRING);
+  
+    require_once 'vista_form.php';
 }
 else {
+    
+       
+      $_SESSION['apellido'] = filter_var($_POST['apellido'], FILTER_SANITIZE_STRING);
+    $_SESSION['nombre'] = filter_var($_POST['nombre'], FILTER_SANITIZE_STRING);
+    $_SESSION['documento'] = filter_var($_POST['documento'], FILTER_SANITIZE_STRING);
+    $_SESSION['estado'] = filter_var($_POST['estado'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $_SESSION['nacionalidad'] = filter_var($_POST['nacionalidad'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $_SESSION['fechaNacimiento'] = date($_POST['fecha_nac']);
+    list($anio, $mes, $dia) = explode("/",$_SESSION['fechaNacimiento']);  
+    $_SESSION['edad'] = Calcular_edad ( $dia,$mes,$anio);
     require __DIR__ . '/confirmacion.php';
 }
 
