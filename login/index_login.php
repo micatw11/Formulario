@@ -15,7 +15,7 @@
                 <br><br>
             </div>
             <div class="form-group">
-                <label>Password:</label><br>
+                <label>Contraseña:</label><br>
                 <input type="password" name="password" size="8" maxlength="50" class="form-control" id="password" required>
                 <br><br>
             </div>

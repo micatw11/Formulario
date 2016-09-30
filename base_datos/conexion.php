@@ -9,7 +9,9 @@ ini_set("display_errors", true);
 function conectar() {
     try {
         
+
         $pdo = new PDO('mysql:host=localhost;dbname=Base_Datos', 'root', 'udc');
+
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->exec("SET NAMES UTF8");
@@ -60,7 +62,7 @@ function datos_bd($nom_tabla) {
 
         echo 'Error de peticion de registros: ' . $e->getMessage();
     }
-}
+} 
 
 function datos_limitados($inicio, $TAMANO_PAGINA) {
     try {

@@ -22,7 +22,7 @@
        
      if ($_SESSION['id']==NULL){
         ingresar_variables();
-     }else{
+     }else{ 
          
            $fecha_nacimiento = date("Y-m-d", $_SESSION['fecha']);
           $_SESSION['fechaNacimiento']=$fecha_nacimiento; ?>
